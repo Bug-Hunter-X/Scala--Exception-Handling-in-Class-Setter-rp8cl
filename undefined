@@ -1,0 +1,39 @@
+```scala
+import scala.util.{Try, Success, Failure}
+
+class MyClass(val name: String) {
+  private var _age: Int = 0
+
+  def age: Int = _age
+
+  def age_=(newAge: Int): Unit = {
+    Try {
+      if (newAge >= 0) {
+        _age = newAge
+      } else {
+        throw new IllegalArgumentException("Age cannot be negative")
+      }
+    } match {
+      case Success(_) => 
+      case Failure(exception) => println(s"Error setting age: "+exception.getMessage) //Handle Exception
+    }
+  }
+
+  def ageEither(newAge: Int): Either[String, Int] = {
+    if (newAge >= 0) {
+      Right(newAge)
+    } else {
+      Left("Age cannot be negative")
+    }
+  }
+}
+
+object Main extends App {
+  val myObj = new MyClass("John")
+  myObj.age = 30
+  println(myObj.age) // Prints 30
+  myObj.age = -5  //Prints error message
+  val ageResult: Either[String, Int] = myObj.ageEither(-2)
+  println(ageResult) // Left(Age cannot be negative)
+}
+```
